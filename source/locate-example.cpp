@@ -46,15 +46,13 @@ locator::locator()
 auto find_me() -> void {};
 #endif
 
-auto locator::find_rel_path(const std::string& rel_path,
+auto locator::find_rel_path(const path_t& rel_path,
                             bool explicit_paths_only) const
     -> std::optional<std::filesystem::path>
 {
-  auto path = path_t(rel_path);
-
   // Step 1. Search explicit files
   for (const auto& file : m_explicit_files) {
-    if (file.filename() == path.lexically_normal().string()
+    if (file.filename() == rel_path.lexically_normal().string()
         && std::filesystem::exists(file))
     {
       return file;
@@ -63,7 +61,7 @@ auto locator::find_rel_path(const std::string& rel_path,
 
   // Step 2. Search explicit directories
   for (const auto& dir : m_explicit_directories) {
-    if (auto found = find_path_in_dir(path, dir)) {
+    if (auto found = find_path_in_dir(rel_path, dir)) {
       return found;
     }
   }
@@ -76,19 +74,19 @@ auto locator::find_rel_path(const std::string& rel_path,
   if (m_use_env) {
     auto* install_dir = std::getenv(m_env_install_root);
     if (install_dir != nullptr) {
-      if (auto found = find_path_in_dir(path, install_dir)) {
+      if (auto found = find_path_in_dir(rel_path, install_dir)) {
         return found;
       }
     }
   }
 
   // Step 4. Relative paths to this compiled object shared library or executable
-  if (auto found = find_path_in_dir(path, m_calculated_from_obj_path)) {
+  if (auto found = find_path_in_dir(rel_path, m_calculated_from_obj_path)) {
     return found;
   }
 
   // Step 5. Compiled, known install location
-  if (auto found = find_path_in_dir(path, m_standard_location)) {
+  if (auto found = find_path_in_dir(rel_path, m_standard_location)) {
     return found;
   }
 
@@ -106,12 +104,12 @@ auto locator::use_env() const -> bool
   return m_use_env;
 }
 
-auto locator::add_explicit_search_file(const std::string& file) -> void
+auto locator::add_explicit_search_file(const path_t& file) -> void
 {
   m_explicit_files.emplace_back(file);
 }
 
-auto locator::add_explicit_search_dir(const std::string& dir) -> void
+auto locator::add_explicit_search_dir(const path_t& dir) -> void
 {
   m_explicit_directories.emplace_back(dir);
 }

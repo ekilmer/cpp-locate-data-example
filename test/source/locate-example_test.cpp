@@ -42,7 +42,7 @@ TEST_CASE("Test default path lookup", "[classic]")
 
   SECTION("Find static.txt")
   {
-    auto path = locator.find_rel_path("static.txt");
+    auto path = locator.find_rel_path(static_cast<path_t>("static.txt"));
     REQUIRE(path.has_value());
 
     auto content = read_file_content(*path);
@@ -51,7 +51,7 @@ TEST_CASE("Test default path lookup", "[classic]")
 
   SECTION("Find dynamic.txt")
   {
-    auto path = locator.find_rel_path("dynamic.txt");
+    auto path = locator.find_rel_path(static_cast<path_t>("dynamic.txt"));
     REQUIRE(path.has_value());
 
     auto content = read_file_content(*path);
@@ -68,8 +68,8 @@ TEST_CASE("Test explicit path lookup", "[classic]")
 
   SECTION("Find static.txt uses dir")
   {
-    auto path =
-        locator.find_rel_path("static.txt", /*explicit_paths_only=*/true);
+    auto path = locator.find_rel_path(static_cast<path_t>("static.txt"),
+                                      /*explicit_paths_only=*/true);
     REQUIRE(path.has_value());
 
     auto content = read_file_content(*path);
@@ -78,8 +78,8 @@ TEST_CASE("Test explicit path lookup", "[classic]")
 
   SECTION("Find dynamic.txt uses dir")
   {
-    auto path =
-        locator.find_rel_path("dynamic.txt", /*explicit_paths_only=*/true);
+    auto path = locator.find_rel_path(static_cast<path_t>("dynamic.txt"),
+                                      /*explicit_paths_only=*/true);
     REQUIRE(path.has_value());
 
     auto content = read_file_content(*path);
@@ -89,8 +89,8 @@ TEST_CASE("Test explicit path lookup", "[classic]")
   locator.add_explicit_search_file(LOCATE_EXAMPLE_TEST_STATICFILE);
   SECTION("Find static.txt uses file")
   {
-    auto path =
-        locator.find_rel_path("static.txt", /*explicit_paths_only=*/true);
+    auto path = locator.find_rel_path(static_cast<path_t>("static.txt"),
+                                      /*explicit_paths_only=*/true);
     REQUIRE(path.has_value());
 
     auto content = read_file_content(*path);
@@ -99,8 +99,8 @@ TEST_CASE("Test explicit path lookup", "[classic]")
 
   SECTION("Find dynamic.txt uses dir")
   {
-    auto path =
-        locator.find_rel_path("dynamic.txt", /*explicit_paths_only=*/true);
+    auto path = locator.find_rel_path(static_cast<path_t>("dynamic.txt"),
+                                      /*explicit_paths_only=*/true);
     REQUIRE(path.has_value());
 
     auto content = read_file_content(*path);
@@ -115,8 +115,8 @@ TEST_CASE("Test subdir in path", "[classic]")
 
   SECTION("Do not find subpath")
   {
-    auto path =
-        locator.find_rel_path("data/static.txt", /*explicit_paths_only=*/true);
+    auto path = locator.find_rel_path(static_cast<path_t>("data/static.txt"),
+                                      /*explicit_paths_only=*/true);
     // Don't find this because we only support relative paths from the
     // directories given
     REQUIRE(path == std::nullopt);
@@ -124,21 +124,19 @@ TEST_CASE("Test subdir in path", "[classic]")
 
   SECTION("Find file in current directory")
   {
-    auto path =
-        locator.find_rel_path("./static.txt", /*explicit_paths_only=*/true);
+    auto path = locator.find_rel_path(static_cast<path_t>("./static.txt"),
+                                      /*explicit_paths_only=*/true);
     // Don't find this because we only support relative paths from the
     // directories given
     REQUIRE(path.has_value());
   }
 
   locator.add_explicit_search_dir(
-      std::filesystem::path(LOCATE_EXAMPLE_TEST_STATICFILE)
-          .parent_path()
-          .parent_path());
+      path_t(LOCATE_EXAMPLE_TEST_STATICFILE).parent_path().parent_path());
   SECTION("Find file in data/ directory")
   {
-    auto path =
-        locator.find_rel_path("data/static.txt", /*explicit_paths_only=*/true);
+    auto path = locator.find_rel_path(static_cast<path_t>("data/static.txt"),
+                                      /*explicit_paths_only=*/true);
     // Don't find this because we only support relative paths from the
     // directories given
     REQUIRE(path.has_value());

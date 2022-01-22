@@ -4,7 +4,7 @@ project(locate-exampleTests LANGUAGES CXX)
 
 include(../cmake/project-is-top-level.cmake)
 include(../cmake/folders.cmake)
-include(../cmake/windows-set-path.cmake)
+include(../cmake/windows-get-path.cmake)
 
 set(locate_example_datadir "${locate-example_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}")
 if(PROJECT_IS_TOP_LEVEL)
@@ -34,9 +34,13 @@ set_target_properties(locate-example_test PROPERTIES
   MINSIZEREL_POSTFIX "${CMAKE_MINSIZEREL_POSTFIX}"
 )
 
-windows_set_path(locate-example_test locate-example::locate-example)
+windows_get_path(win_path locate-example::locate-example)
 
 include(Catch)
-catch_discover_tests(locate-example_test)
+catch_discover_tests(
+  locate-example_test
+  PROPERTIES
+    ENVIRONMENT "${win_path}"
+)
 
 add_folders(Test)

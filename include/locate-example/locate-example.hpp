@@ -86,9 +86,9 @@ public:
    */
   [[nodiscard]] auto use_env() const -> bool;
 
-  auto add_explicit_search_dir(const std::string& dir) -> void;
+  auto add_explicit_search_dir(const path_t& dir) -> void;
 
-  auto add_explicit_search_file(const std::string& file) -> void;
+  auto add_explicit_search_file(const path_t& file) -> void;
 
   /**
    * @brief Find the specified data file by name in the data directory
@@ -97,7 +97,7 @@ public:
    * manually set
    * @return The path to the file if found
    */
-  [[nodiscard]] auto find_rel_path(const std::string& rel_path,
+  [[nodiscard]] auto find_rel_path(const path_t& rel_path,
                                    bool explicit_paths_only = false) const
       -> std::optional<std::filesystem::path>;
 
