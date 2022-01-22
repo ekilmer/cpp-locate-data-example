@@ -1,0 +1,18 @@
+#pragma once
+
+namespace locate_example {
+
+// Absolute path to configured install prefix/root
+// This isn't always accurate due to relocation
+static constexpr std::string_view install_prefix_dir = "@CMAKE_INSTALL_PREFIX@";
+
+// Relative path to data file directory from install prefix/root
+static constexpr std::string_view install_datadir_relative = "@CMAKE_INSTALL_DATADIR@";
+
+// Relative path from executable to datadir
+static constexpr std::string_view datadir_relative_exe = "@datadir_relative_exe@";
+
+// Relative path from shared library to datadir
+static constexpr std::string_view datadir_relative_lib = "@datadir_relative_lib@";
+
+} // namespace locate_example

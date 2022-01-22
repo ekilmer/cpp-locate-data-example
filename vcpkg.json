@@ -1,0 +1,13 @@
+{
+  "name": "locate-example",
+  "version-semver": "0.1.0",
+  "dependencies": [
+    "cpplocate"
+  ],
+  "features": {
+    "tests": {
+      "description": "Build Tests",
+      "dependencies": [ "catch2" ]
+    }
+  }
+}

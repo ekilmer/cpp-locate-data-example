@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 15cf8ff..c5d4b98 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -175,20 +175,3 @@ endif()
+ add_subdirectory(source)
+ add_subdirectory(docs)
+ add_subdirectory(deploy)
+-
+-
+-# 
+-# Deployment (global project files)
+-# 
+-
+-# Install version file
+-install(FILES "${PROJECT_BINARY_DIR}/VERSION" DESTINATION ${INSTALL_ROOT} COMPONENT meta)
+-
+-# Install cmake find script for the project
+-install(FILES cpplocate-config.cmake DESTINATION ${INSTALL_ROOT} COMPONENT dev_cpp)
+-install(FILES liblocate-config.cmake DESTINATION ${INSTALL_ROOT} COMPONENT dev_c)
+-
+-# Install the project meta files
+-install(FILES AUTHORS   DESTINATION ${INSTALL_ROOT} COMPONENT meta)
+-install(FILES LICENSE   DESTINATION ${INSTALL_ROOT} COMPONENT meta)
+-install(FILES README.md DESTINATION ${INSTALL_ROOT} COMPONENT meta)

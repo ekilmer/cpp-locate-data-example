@@ -15,6 +15,26 @@ docs_early_return()
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
+# TODO: Is this acceptable when another project adds this one as a
+#  subdirectory/FetchContent??
+include(GNUInstallDirs)
+
+# TODO: Maybe have some logic to check if a multi-config generator and remove
+# these suffixes if doing single-config of these types
+set(build_configs " " "_RELEASE" "_DEBUG" "_RELWITHDEBINFO" "_MINSIZEREL")
+foreach(config ${build_configs})
+  message(STATUS "Setting for config '${config}'")
+  # Mirror installation layout in build directory so that we can find the data
+  # files using relative paths no matter which config we use
+  # NOTE: Not sure if these should just be set on the target(s) rather than for the project
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+  set(CMAKE_PDB_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+  # TODO: Test this
+  set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/pdb")
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+endforeach()
+
 # ---- Declare library ----
 
 add_library(
@@ -29,6 +49,19 @@ generate_export_header(
     BASE_NAME locate-example
     EXPORT_FILE_NAME export/locate-example/locate-example_export.hpp
     CUSTOM_CONTENT_FROM_VARIABLE pragma_suppress_c4251
+)
+
+# Setup default paths during CMake configure
+file(RELATIVE_PATH datadir_relative_exe "/${CMAKE_INSTALL_BINDIR}" "/${CMAKE_INSTALL_DATADIR}")
+file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_LIBDIR}" "/${CMAKE_INSTALL_DATADIR}")
+configure_file(
+  generate/include/locate-example/defaultPaths.hpp.in
+  "${PROJECT_BINARY_DIR}/generate/include/locate-example/defaultPaths.hpp"
+  @ONLY
+)
+file(GENERATE
+  OUTPUT "${PROJECT_BINARY_DIR}/include/locate-example/defaultPaths.hpp"
+  INPUT "${PROJECT_BINARY_DIR}/generate/include/locate-example/defaultPaths.hpp"
 )
 
 if(NOT BUILD_SHARED_LIBS)
@@ -49,6 +82,7 @@ target_include_directories(
     locate-example_locate-example ${warning_guard}
     PUBLIC
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+    "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"
 )
 
 target_include_directories(
@@ -58,6 +92,29 @@ target_include_directories(
 )
 
 target_compile_features(locate-example_locate-example PUBLIC cxx_std_17)
+
+find_package(cpplocate REQUIRED)
+
+target_link_libraries(locate-example_locate-example PRIVATE cpplocate::cpplocate)
+
+# ---- Handle data files ----
+
+# Use some configure-time info to generate a file with content that isn't known
+# until project configuration. This could also be codegen of some sort
+configure_file(
+  generate/data/dynamic.txt.in
+  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/dynamic.txt"
+  @ONLY
+)
+
+# Copy all static data files to build directory so that they are locatable
+# by our binaries/tests from the build directory
+add_custom_command(
+  TARGET locate-example_locate-example POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/data/"
+    "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}"
+)
 
 # ---- Install rules ----
 

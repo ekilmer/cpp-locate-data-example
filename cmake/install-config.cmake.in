@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+# TODO(ekilmer): This isn't valid within the build directory
+set_and_check(LOCATE_EXAMPLE_DATA_DIR "@PACKAGE_CMAKE_INSTALL_DATADIR@")
+
+include(CMakeFindDependencyMacro)
+
+if(NOT "@BUILD_SHARED_LIBS@")
+  find_dependency(cpplocate)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/locate-exampleTargets.cmake")
