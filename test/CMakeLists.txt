@@ -34,9 +34,9 @@ set_target_properties(locate-example_test PROPERTIES
   MINSIZEREL_POSTFIX "${CMAKE_MINSIZEREL_POSTFIX}"
 )
 
+windows_set_path(locate-example_test locate-example::locate-example)
+
 include(Catch)
 catch_discover_tests(locate-example_test)
-
-windows_set_path(locate-example_test locate-example::locate-example)
 
 add_folders(Test)

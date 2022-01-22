@@ -6,11 +6,13 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     remove-global-install.patch
+    fix-install-paths.patch
 )
 
 vcpkg_cmake_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
+  OPTIONS
+    -DOPTION_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()

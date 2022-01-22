@@ -23,6 +23,14 @@
       }
     },
     {
+      "name": "vcpkg-ci",
+      "hidden": true,
+      "inherits": "vcpkg-test",
+      "environment": {
+        "VCPKG_ROOT": "${sourceDir}/vcpkg"
+      }
+    },
+    {
       "name": "cmake-pedantic",
       "hidden": true,
       "warnings": {
@@ -114,18 +122,24 @@
     },
     {
       "name": "ci-coverage",
-      "inherits": ["coverage-unix", "dev-mode", "vcpkg-test"],
+      "inherits": ["coverage-unix", "dev-mode", "vcpkg-ci"],
       "cacheVariables": {
         "COVERAGE_HTML_COMMAND": ""
+      },
+      "errors": {
+        "dev": false
       }
     },
     {
       "name": "ci-sanitize",
       "binaryDir": "${sourceDir}/build/sanitize",
-      "inherits": ["ci-unix", "dev-mode", "vcpkg-test"],
+      "inherits": ["ci-unix", "dev-mode", "vcpkg-ci"],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Sanitize",
         "CMAKE_CXX_FLAGS_SANITIZE": "-O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common"
+      },
+      "errors": {
+        "dev": false
       }
     },
     {
@@ -134,16 +148,25 @@
       "hidden": true
     },
     {
-      "name": "ci-macos",
-      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-test"]
+      "name": "ci-macos-11",
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-ci"],
+      "errors": {
+        "dev": false
+      }
     },
     {
-      "name": "ci-ubuntu",
-      "inherits": ["ci-build", "ci-unix", "clang-tidy", "cppcheck", "dev-mode", "vcpkg-test"]
+      "name": "ci-ubuntu-20.04",
+      "inherits": ["ci-build", "ci-unix", "clang-tidy", "cppcheck", "dev-mode", "vcpkg-ci"],
+      "errors": {
+        "dev": false
+      }
     },
     {
-      "name": "ci-windows",
-      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg-test"]
+      "name": "ci-windows-2019",
+      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg-ci"],
+      "errors": {
+        "dev": false
+      }
     }
   ]
 }
