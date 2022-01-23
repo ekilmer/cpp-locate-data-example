@@ -31,7 +31,8 @@ locator::locator()
 // into a shared library?
 #ifdef LOCATE_EXAMPLE_STATIC_DEFINE
   m_calculated_from_obj_path = path_t(cpplocate::getExecutablePath())
-                                   .append(datadir_relative_lib)
+                                   .parent_path()
+                                   .append(datadir_relative_exe)
 #else
   m_calculated_from_obj_path =
       path_t(cpplocate::getLibraryPath(

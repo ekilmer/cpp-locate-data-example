@@ -30,11 +30,6 @@ install(
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
-write_basic_package_version_file(
-    "${package}ConfigVersion.cmake"
-    COMPATIBILITY SameMajorVersion
-)
-
 # Allow package maintainers to freely override the path for the configs
 set(
     locate-example_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATAROOTDIR}/${package}"
@@ -42,7 +37,13 @@ set(
 )
 mark_as_advanced(locate-example_INSTALL_CMAKEDIR)
 
-configure_package_config_file(cmake/install-config.cmake.in "${package}Config.cmake"
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_CMAKEDIR}/${package}ConfigVersion.cmake"
+  COMPATIBILITY SameMajorVersion
+)
+
+configure_package_config_file(cmake/install-config.cmake.in
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_CMAKEDIR}/${package}Config.cmake"
   INSTALL_DESTINATION "${locate-example_INSTALL_CMAKEDIR}"
   NO_CHECK_REQUIRED_COMPONENTS_MACRO
   PATH_VARS CMAKE_INSTALL_DATADIR
@@ -50,8 +51,8 @@ configure_package_config_file(cmake/install-config.cmake.in "${package}Config.cm
 
 install(
   FILES
-  "${PROJECT_BINARY_DIR}/${package}Config.cmake"
-  "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_CMAKEDIR}/${package}Config.cmake"
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_CMAKEDIR}/${package}ConfigVersion.cmake"
   DESTINATION "${locate-example_INSTALL_CMAKEDIR}"
   COMPONENT locate-example_Development
 )
@@ -66,10 +67,18 @@ install(
 # Install our data files. NOTE: Only looks at the build directory because we've
 # already had to copy all data files here
 install(
-  DIRECTORY
-  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/"
+  FILES
+  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/static.txt"
+  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/dynamic.txt"
   DESTINATION "${CMAKE_INSTALL_DATADIR}"
   COMPONENT locate-example_Runtime
+)
+
+# Make the build directory importable
+export(
+  EXPORT locate-exampleTargets
+  NAMESPACE locate-example::
+  FILE "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_CMAKEDIR}/${package}Targets.cmake"
 )
 
 if(PROJECT_IS_TOP_LEVEL)

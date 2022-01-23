@@ -183,6 +183,22 @@ jobs:
       working-directory: build
       run: ctest --output-on-failure -C Release -j 2
 
+    - name: Run examples
+      run: cmake --build build --config Release --target run-examples
+
+    - name: Build and Run examples using build dir
+      working-directory: example
+      run: |
+        cmake --preset=ci-${{ matrix.os }}-build-dir
+        cmake --build build --config Release --target run-examples
+
+    - name: Build and Run examples using install dir
+      working-directory: example
+      run: |
+        cmake -E rm -rf ../build build
+        cmake --preset=ci-${{ matrix.os }}-install-dir
+        cmake --build build --config Release --target run-examples
+
   docs:
     # Deploy docs only when builds succeed
     needs: [sanitize, test]
