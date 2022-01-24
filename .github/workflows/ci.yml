@@ -157,7 +157,8 @@ jobs:
           -username "${{ github.repository_owner }}" \
           -password "${{ secrets.GITHUB_TOKEN }}"
         cmake --preset=ci-${{ matrix.os }} \
-          -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+          -D BUILD_SHARED_LIBS=${{ matrix.shared }} \
+          -DCMAKE_INSTALL_BINDIR=tools/locate-example
 
     - name: Configure Windows
       if: startsWith(matrix.os, 'windows')
@@ -171,7 +172,8 @@ jobs:
             -username "${{ github.repository_owner }}" `
             -password "${{ secrets.GITHUB_TOKEN }}"
         cmake --preset=ci-${{ matrix.os }} `
-          -DBUILD_SHARED_LIBS=${{ matrix.shared }}
+          -DBUILD_SHARED_LIBS=${{ matrix.shared }} `
+          -DCMAKE_INSTALL_BINDIR=tools/locate-example
 
     - name: Build
       run: cmake --build build --config Release -j 2

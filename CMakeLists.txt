@@ -53,7 +53,11 @@ generate_export_header(
 
 # Setup default paths during CMake configure
 file(RELATIVE_PATH datadir_relative_exe "/${CMAKE_INSTALL_BINDIR}" "/${CMAKE_INSTALL_DATADIR}")
-file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_LIBDIR}" "/${CMAKE_INSTALL_DATADIR}")
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_BINDIR}" "/${CMAKE_INSTALL_DATADIR}")
+else()
+  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_LIBDIR}" "/${CMAKE_INSTALL_DATADIR}")
+endif()
 configure_file(
   generate/include/locate-example/defaultPaths.hpp.in
   "${PROJECT_BINARY_DIR}/generate/include/locate-example/defaultPaths.hpp"
