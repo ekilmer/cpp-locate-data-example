@@ -185,6 +185,12 @@ jobs:
       working-directory: build
       run: ctest --output-on-failure -C Release -j 2
 
+    - name: Test Windows Multi-Config Debug build
+      if: startsWith(matrix.os, 'windows')
+      run: |
+        cmake --build build --config Debug -j 2
+        ctest --output-on-failure -C Debug -j 2
+
     - name: Run examples
       run: cmake --build build --config Release --target run-examples
 
