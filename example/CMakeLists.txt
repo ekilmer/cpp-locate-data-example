@@ -7,9 +7,6 @@ include(../cmake/folders.cmake)
 
 if(PROJECT_IS_TOP_LEVEL)
   find_package(locate-example REQUIRED)
-else()
-  set(LOCATE_EXAMPLE_DATA_DIR "${locate-example_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}")
-  set(LOCATE_EXAMPLE_SHARED ${BUILD_SHARED_LIBS})
 endif()
 
 add_custom_target(run-examples)

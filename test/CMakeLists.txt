@@ -6,10 +6,8 @@ include(../cmake/project-is-top-level.cmake)
 include(../cmake/folders.cmake)
 include(../cmake/windows-get-path.cmake)
 
-set(locate_example_datadir "${locate-example_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}")
 if(PROJECT_IS_TOP_LEVEL)
   find_package(locate-example REQUIRED)
-  set(locate_example_datadir "${LOCATE_EXAMPLE_DATA_DIR}")
   enable_testing()
 endif()
 
@@ -22,7 +20,7 @@ target_link_libraries(locate-example_test PRIVATE
 )
 target_compile_features(locate-example_test PRIVATE cxx_std_17)
 target_compile_definitions(locate-example_test PRIVATE
-  "LOCATE_EXAMPLE_TEST_DATADIR=\"${locate_example_datadir}\""
+  "LOCATE_EXAMPLE_TEST_DATADIR=\"${LOCATE_EXAMPLE_DATA_DIR}\""
   "LOCATE_EXAMPLE_TEST_STATICFILE=\"${CMAKE_CURRENT_LIST_DIR}/data/static.txt\""
 )
 

@@ -113,6 +113,23 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
   include(cmake/install-rules.cmake)
 endif()
 
+# Other rules related to installation/usage of this project
+# These are also set in the project Config file
+# Other rules related to installation/usage of this project
+# These are also set in the project Config file
+# NOTE: If BUILD_SHARED_LIBS isn't defined, then default is static
+set(shared_lib OFF)
+if(DEFINED BUILD_SHARED_LIBS)
+  set(shared_lib "${BUILD_SHARED_LIBS}")
+endif()
+# The actual variables that need to be set and matched in Config
+set(LOCATE_EXAMPLE_SHARED "${shared_lib}" CACHE INTERNAL
+  "Whether the locate-example project was built as a shared library"
+)
+set(LOCATE_EXAMPLE_DATA_DIR "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}" CACHE INTERNAL
+  "The absolute path to the data files directory"
+)
+
 # ---- Examples ----
 
 if(PROJECT_IS_TOP_LEVEL)
