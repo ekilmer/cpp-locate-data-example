@@ -92,5 +92,10 @@ the number of jobs to use, which should ideally be specified to the number of
 threads your CPU has. You may also want to add that to your preset using the
 `jobs` property, see the [presets documentation][1] for more details.
 
+**NOTE**: Testing with a multi-config CMake generator has some issues with
+Catch2 test framework. Specifically, you must rebuild with the configuration of
+choice before trying to run the tests (even specifying `--config <CONFIG>`
+doesn't work unless that build configuration was just built before running).
+
 [1]: https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html
 [2]: https://cmake.org/download/
