@@ -25,14 +25,6 @@ target_compile_definitions(locate-example_test PRIVATE
   "LOCATE_EXAMPLE_TEST_DATADIR=\"${locate_example_datadir}\""
   "LOCATE_EXAMPLE_TEST_STATICFILE=\"${CMAKE_CURRENT_LIST_DIR}/data/static.txt\""
 )
-# NOTE: Need to add these postfixes to executables for every configuration that
-# ends up in the same folder
-set_target_properties(locate-example_test PROPERTIES
-  RELEASE_POSTFIX "${CMAKE_RELEASE_POSTFIX}"
-  DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-  RELWITHDEBINFO_POSTFIX "${CMAKE_RELWITHDEBINFO_POSTFIX}"
-  MINSIZEREL_POSTFIX "${CMAKE_MINSIZEREL_POSTFIX}"
-)
 
 windows_get_path(win_path locate-example::locate-example)
 

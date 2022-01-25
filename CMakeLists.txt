@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 
 include(cmake/prelude.cmake)
 
@@ -14,26 +14,12 @@ docs_early_return()
 
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
+include(cmake/set-multiconfig-target-properties.cmake)
 
 # TODO: Is this acceptable when another project adds this one as a
-#  subdirectory/FetchContent??
+#  subdirectory/FetchContent?? Could always guard on CMAKE_SKIP_INSTALL_RULES and
+#  just let something happen, but that doesn't seem safe and not sure if it works
 include(GNUInstallDirs)
-
-# TODO: Maybe have some logic to check if a multi-config generator and remove
-# these suffixes if doing single-config of these types
-set(build_configs " " "_RELEASE" "_DEBUG" "_RELWITHDEBINFO" "_MINSIZEREL")
-foreach(config ${build_configs})
-  message(STATUS "Setting for config '${config}'")
-  # Mirror installation layout in build directory so that we can find the data
-  # files using relative paths no matter which config we use
-  # NOTE: Not sure if these should just be set on the target(s) rather than for the project
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
-  set(CMAKE_PDB_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
-  # TODO: Test this
-  set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/pdb")
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY${config} "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
-endforeach()
 
 # ---- Declare library ----
 
@@ -81,6 +67,7 @@ set_target_properties(
     EXPORT_NAME locate-example
     OUTPUT_NAME locate-example
 )
+set_multiconfig_target_properties(locate-example_locate-example)
 
 target_include_directories(
     locate-example_locate-example ${warning_guard}

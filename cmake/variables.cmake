@@ -13,27 +13,6 @@ if(PROJECT_IS_TOP_LEVEL)
     CMAKE_INSTALL_DATADIR "share/locate-example"
     CACHE PATH "Data file location relative to the install prefix"
   )
-
-  # Need to have different postfix for multi-config generators and still support
-  # relative path lookup for data files
-  set(
-    CMAKE_RELEASE_POSTFIX ""
-    CACHE STRING "Default filename postfix for libraries under configuration Release"
-  )
-  set(
-    CMAKE_DEBUG_POSTFIX "_d"
-    CACHE STRING "Default filename postfix for libraries under configuration Debug"
-  )
-  # TODO: Maybe have some logic to check if a multi-config generator and remove
-  # these suffixes if doing single-config of these types
-  set(
-    CMAKE_RELWITHDEBINFO_POSTFIX "_rwdi"
-    CACHE STRING "Default filename postfix for libraries under configuration RelWithDebugInfo"
-  )
-  set(
-    CMAKE_MINSIZEREL_POSTFIX "_msr"
-    CACHE STRING "Default filename postfix for libraries under configuration MinSizeRel"
-  )
 endif()
 
 # ---- Suppress C4251 on Windows ----

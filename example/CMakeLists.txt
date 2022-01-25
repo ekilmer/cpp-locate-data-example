@@ -9,6 +9,7 @@ if(PROJECT_IS_TOP_LEVEL)
   find_package(locate-example REQUIRED)
 else()
   set(LOCATE_EXAMPLE_DATA_DIR "${locate-example_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}")
+  set(LOCATE_EXAMPLE_SHARED ${BUILD_SHARED_LIBS})
 endif()
 
 add_custom_target(run-examples)
@@ -17,15 +18,6 @@ function(add_example NAME)
   add_executable("${NAME}" "${NAME}.cpp")
   target_link_libraries("${NAME}" PRIVATE locate-example::locate-example)
   target_compile_features("${NAME}" PRIVATE cxx_std_17)
-
-  # NOTE: Need to add these postfixes to executables for every configuration
-  # that ends up in the same folder
-  set_target_properties("${NAME}" PROPERTIES
-    RELEASE_POSTFIX "${CMAKE_RELEASE_POSTFIX}"
-    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-    RELWITHDEBINFO_POSTFIX "${CMAKE_RELWITHDEBINFO_POSTFIX}"
-    MINSIZEREL_POSTFIX "${CMAKE_MINSIZEREL_POSTFIX}"
-  )
 
   # Might need to set data directory path
   set(datadir_path)

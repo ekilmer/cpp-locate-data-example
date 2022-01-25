@@ -5,6 +5,7 @@
 # Usage: windows_get_path(<var> <target>...)
 function(windows_get_path VARIABLE)
   if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    set(${VARIABLE} "" PARENT_SCOPE)
     return()
   endif()
 
