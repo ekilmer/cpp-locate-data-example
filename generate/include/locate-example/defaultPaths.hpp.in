@@ -7,7 +7,7 @@ namespace locate_example {
 static constexpr std::string_view install_prefix_dir = "@CMAKE_INSTALL_PREFIX@";
 
 // Relative path to data file directory from install prefix/root
-static constexpr std::string_view install_datadir_relative = "@CMAKE_INSTALL_DATADIR@";
+static constexpr std::string_view install_datadir_relative = "@locate-example_INSTALL_DATADIR@";
 
 // Relative path from executable to datadir
 static constexpr std::string_view datadir_relative_exe = "@datadir_relative_exe@";

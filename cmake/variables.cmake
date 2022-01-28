@@ -8,17 +8,23 @@ if(PROJECT_IS_TOP_LEVEL)
   option(locate-example_DEVELOPER_MODE "Enable developer mode" OFF)
   option(BUILD_SHARED_LIBS "Build shared libs." OFF)
 
-  # Allow package maintainers to freely override data file directory
   set(CMAKE_INSTALL_INCLUDEDIR include/locate-example CACHE PATH "")
-  set(CMAKE_INSTALL_DATAROOTDIR "share" CACHE PATH "")
-  set(CMAKE_INSTALL_DATADIR "${CMAKE_INSTALL_DATAROOTDIR}/locate-example" CACHE PATH "")
 endif()
 
-# This is here instead of in install-rules because we use the set variables in
-# setting up the build directory to support finding data files
-if(NOT CMAKE_SKIP_INSTALL_RULES)
-  include(GNUInstallDirs)
-endif()
+# We set up the build directory like an install directory, so always include
+# these variables, even if CMAKE_SKIP_INSTALL_RULES is ON
+include(GNUInstallDirs)
+
+# Allow package maintainers to freely override this project's installed data files
+set(locate-example_INSTALL_DATADIR "${CMAKE_INSTALL_DATADIR}/locate-example"
+  CACHE PATH "Project data file root relative to the install prefix"
+)
+mark_as_advanced(locate-example_INSTALL_DATADIR)
+set(
+  locate-example_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/locate-example"
+  CACHE PATH "CMake package config location relative to the install prefix"
+)
+mark_as_advanced(locate-example_INSTALL_CMAKEDIR)
 
 # ---- Suppress C4251 on Windows ----
 

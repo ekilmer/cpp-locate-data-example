@@ -9,7 +9,7 @@ set(LOCATE_EXAMPLE_SHARED @BUILD_SHARED_LIBS@)
 # NOTE: This variable should not be compiled into the binary using this library
 # because it is a dynamically calculated absolute path, which would make the
 # resulting binary not portable or reproducible.
-set_and_check(LOCATE_EXAMPLE_DATA_DIR "@PACKAGE_CMAKE_INSTALL_DATADIR@")
+set_and_check(LOCATE_EXAMPLE_DATA_DIR "@PACKAGE_locate-example_INSTALL_DATADIR@")
 
 include(CMakeFindDependencyMacro)
 

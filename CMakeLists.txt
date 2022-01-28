@@ -33,11 +33,11 @@ generate_export_header(
 )
 
 # Setup default paths during CMake configure
-file(RELATIVE_PATH datadir_relative_exe "/${CMAKE_INSTALL_BINDIR}" "/${CMAKE_INSTALL_DATADIR}")
+file(RELATIVE_PATH datadir_relative_exe "/${CMAKE_INSTALL_BINDIR}" "/${locate-example_INSTALL_DATADIR}")
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_BINDIR}" "/${CMAKE_INSTALL_DATADIR}")
+  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_BINDIR}" "/${locate-example_INSTALL_DATADIR}")
 else()
-  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_LIBDIR}" "/${CMAKE_INSTALL_DATADIR}")
+  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_LIBDIR}" "/${locate-example_INSTALL_DATADIR}")
 endif()
 configure_file(
   generate/include/locate-example/defaultPaths.hpp.in
@@ -89,7 +89,7 @@ target_link_libraries(locate-example_locate-example PRIVATE cpplocate::cpplocate
 # until project configuration. This could also be codegen of some sort
 configure_file(
   generate/data/dynamic.txt.in
-  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/dynamic.txt"
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}/dynamic.txt"
   @ONLY
 )
 
@@ -99,7 +99,7 @@ add_custom_command(
   TARGET locate-example_locate-example POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROJECT_SOURCE_DIR}/data/"
-    "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}"
+    "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}"
 )
 
 # ---- Install rules ----
@@ -121,7 +121,7 @@ endif()
 set(LOCATE_EXAMPLE_SHARED "${shared_lib}" CACHE INTERNAL
   "Whether the locate-example project was built as a shared library"
 )
-set(LOCATE_EXAMPLE_DATA_DIR "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}" CACHE INTERNAL
+set(LOCATE_EXAMPLE_DATA_DIR "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}" CACHE INTERNAL
   "The absolute path to the data files directory"
 )
 

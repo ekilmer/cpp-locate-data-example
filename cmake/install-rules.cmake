@@ -26,13 +26,6 @@ install(
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 
-# Allow package maintainers to freely override the path for the configs
-set(
-    locate-example_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATAROOTDIR}/${package}"
-    CACHE PATH "CMake package config location relative to the install prefix"
-)
-mark_as_advanced(locate-example_INSTALL_CMAKEDIR)
-
 write_basic_package_version_file(
   "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_CMAKEDIR}/${package}ConfigVersion.cmake"
   COMPATIBILITY SameMajorVersion
@@ -42,7 +35,7 @@ configure_package_config_file(cmake/install-config.cmake.in
   "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_CMAKEDIR}/${package}Config.cmake"
   INSTALL_DESTINATION "${locate-example_INSTALL_CMAKEDIR}"
   NO_CHECK_REQUIRED_COMPONENTS_MACRO
-  PATH_VARS CMAKE_INSTALL_DATADIR
+  PATH_VARS locate-example_INSTALL_DATADIR
 )
 
 install(
@@ -64,9 +57,9 @@ install(
 # already had to copy all data files here
 install(
   FILES
-  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/static.txt"
-  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/dynamic.txt"
-  DESTINATION "${CMAKE_INSTALL_DATADIR}"
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}/static.txt"
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}/dynamic.txt"
+  DESTINATION "${locate-example_INSTALL_DATADIR}"
   COMPONENT locate-example_Runtime
 )
 
