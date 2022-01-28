@@ -17,13 +17,13 @@ function(add_example NAME)
   target_compile_features("${NAME}" PRIVATE cxx_std_17)
 
   # Might need to set data directory path
-  set(datadir_path)
+  set(datadir_path "")
   if(NOT LOCATE_EXAMPLE_SHARED)
     set(datadir_path "${LOCATE_EXAMPLE_DATA_DIR}")
   endif()
 
   # Set PATH for DLL
-  set(win_env)
+  set(win_env "")
   if(LOCATE_EXAMPLE_SHARED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(win_env ${CMAKE_COMMAND} -E env "\"PATH=$<TARGET_FILE_DIR:locate-example::locate-example>$<SEMICOLON>$<TARGET_FILE_DIR:cpplocate::cpplocate>$<SEMICOLON>%PATH%\"")
   endif()

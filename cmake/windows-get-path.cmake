@@ -16,7 +16,7 @@ function(windows_get_path VARIABLE)
       get_target_property(type "${target}" TYPE)
       if(type STREQUAL "SHARED_LIBRARY")
         set(path "${path}${glue}$<TARGET_FILE_DIR:${target}>")
-        set(glue "$<SEMICOLON>") # backslash is important
+        set(glue "$<SEMICOLON>")
       endif()
     endif()
   endforeach()
