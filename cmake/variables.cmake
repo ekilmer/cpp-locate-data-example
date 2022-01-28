@@ -9,10 +9,15 @@ if(PROJECT_IS_TOP_LEVEL)
   option(BUILD_SHARED_LIBS "Build shared libs." OFF)
 
   # Allow package maintainers to freely override data file directory
-  set(
-    CMAKE_INSTALL_DATADIR "share/locate-example"
-    CACHE PATH "Data file location relative to the install prefix"
-  )
+  set(CMAKE_INSTALL_INCLUDEDIR include/locate-example CACHE PATH "")
+  set(CMAKE_INSTALL_DATAROOTDIR "share" CACHE PATH "")
+  set(CMAKE_INSTALL_DATADIR "${CMAKE_INSTALL_DATAROOTDIR}/locate-example" CACHE PATH "")
+endif()
+
+# This is here instead of in install-rules because we use the set variables in
+# setting up the build directory to support finding data files
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+  include(GNUInstallDirs)
 endif()
 
 # ---- Suppress C4251 on Windows ----

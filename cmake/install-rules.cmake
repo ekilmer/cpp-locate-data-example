@@ -1,7 +1,3 @@
-if(PROJECT_IS_TOP_LEVEL)
-  set(CMAKE_INSTALL_INCLUDEDIR include/locate-example CACHE PATH "")
-endif()
-
 include(CMakePackageConfigHelpers)
 
 # find_package(<package>) call for consumers to find this project

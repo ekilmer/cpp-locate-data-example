@@ -16,11 +16,6 @@ include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 include(cmake/set-multiconfig-target-properties.cmake)
 
-# TODO: Is this acceptable when another project adds this one as a
-#  subdirectory/FetchContent?? Could always guard on CMAKE_SKIP_INSTALL_RULES and
-#  just let something happen, but that doesn't seem safe and not sure if it works
-include(GNUInstallDirs)
-
 # ---- Declare library ----
 
 add_library(
