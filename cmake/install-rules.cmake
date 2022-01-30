@@ -53,8 +53,9 @@ install(
   COMPONENT locate-example_Development
 )
 
-# Install our data files. NOTE: Only looks at the build directory because we've
-# already had to copy all data files here
+# Install our data files.
+# NOTE: Only looks at the build directory because we've already had to copy all
+# data files here
 install(
   FILES
   "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}/static.txt"
@@ -63,7 +64,9 @@ install(
   COMPONENT locate-example_Runtime
 )
 
-# Make the build directory importable
+# Export targets from the build directory. Should be able to set
+# locate-example_DIR to where the '*Targets.cmake' file is located in the build
+# directory
 export(
   EXPORT locate-exampleTargets
   NAMESPACE locate-example::

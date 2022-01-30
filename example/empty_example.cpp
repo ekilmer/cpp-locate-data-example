@@ -77,9 +77,6 @@ auto main(int argc, char* argv[]) -> int
         argv[1]);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   }
 
-  // TODO(ekilmer): Add a simple CLI parser for taking the data directory of
-  //  the installed location of data directory for use when installed as a
-  //  static library
   try {
     return do_example(datadir);
   } catch (const std::exception& exception) {

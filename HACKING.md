@@ -31,17 +31,17 @@ the project:
 
 ```json
 {
-  "version": 2,
+  "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 14,
+    "minor": 15,
     "patch": 0
   },
   "configurePresets": [
     {
       "name": "dev",
       "binaryDir": "${sourceDir}/build/dev",
-      "inherits": ["dev-mode", "ci-<os>"],
+      "inherits": ["dev-mode", "ci-<os>", "vcpkg-ci"],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 15,
@@ -8,6 +8,7 @@
   "configurePresets": [
     {
       "name": "vcpkg",
+      "description": "Set up vcpkg overlay ports and where to find the toolchain file",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
@@ -16,6 +17,7 @@
     },
     {
       "name": "vcpkg-test",
+      "description": "Enables building of test dependencies",
       "hidden": true,
       "inherits": "vcpkg",
       "cacheVariables": {
@@ -24,8 +26,9 @@
     },
     {
       "name": "vcpkg-ci",
-      "hidden": true,
+      "description": "Use the submodule'd vcpkg directory for building dependencies",
       "inherits": "vcpkg-test",
+      "binaryDir": "${sourceDir}/build",
       "environment": {
         "VCPKG_ROOT": "${sourceDir}/vcpkg"
       }

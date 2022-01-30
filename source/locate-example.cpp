@@ -10,7 +10,12 @@ namespace locate_example
 {
 namespace
 {
-// Search for file 'path' in directory 'dir'
+/**
+ * @brief Find the specified path relative to the given directory.
+ * @param path The relative path
+ * @param dir The base directory
+ * @return The full path if it exists
+ */
 auto find_path_in_dir(const std::filesystem::path& path,
                       const std::filesystem::path& dir)
     -> std::optional<std::filesystem::path>
@@ -21,14 +26,13 @@ auto find_path_in_dir(const std::filesystem::path& path,
   }
   return std::nullopt;
 }
+
 }  // namespace
 
 locator::locator()
 {
   m_standard_location = path_t(install_prefix_dir) / install_datadir_relative;
 
-// TODO(ekilmer): Should we still check if this static library was compiled
-// into a shared library?
 #ifdef LOCATE_EXAMPLE_STATIC_DEFINE
   m_calculated_from_obj_path = path_t(cpplocate::getExecutablePath())
                                    .parent_path()
@@ -67,6 +71,7 @@ auto locator::find_rel_path(const path_t& rel_path,
     }
   }
 
+  // Guard if we're only looking for explicit locations
   if (explicit_paths_only) {
     return std::nullopt;
   }
