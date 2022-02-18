@@ -2,6 +2,6 @@
   "name": "example",
   "version-semver": "0.1.0",
   "dependencies": [
-    "cpplocate"
+    "libcpplocate"
   ]
 }
