@@ -78,7 +78,8 @@ auto locator::find_rel_path(const path_t& rel_path,
 
   // Step 3. Search environment variable
   if (m_use_env) {
-    auto* install_dir = std::getenv(m_env_install_root);
+    auto* install_dir =
+        std::getenv(m_env_install_root);  // NOLINT(concurrency-mt-unsafe)
     if (install_dir != nullptr) {
       if (auto found = find_path_in_dir(rel_path, install_dir)) {
         return found;
