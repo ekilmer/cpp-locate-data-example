@@ -18,13 +18,13 @@ function(add_example NAME)
 
   # Might need to set data directory path if we are statically linking
   set(datadir_path "")
-  if(NOT LOCATE_EXAMPLE_SHARED)
-    set(datadir_path "${LOCATE_EXAMPLE_DATA_DIR}")
+  if(NOT locate-example_SHARED)
+    set(datadir_path "${locate-example_DATA_DIR}")
   endif()
 
   # Set PATH for Windows DLL
   set(win_env "")
-  if(LOCATE_EXAMPLE_SHARED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+  if(locate-example_SHARED AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     # NOTE: Change this to something more robust in a real project.
     # See the following
     # * https://cmake.org/cmake/help/latest/module/GetPrerequisites.html

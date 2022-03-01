@@ -126,11 +126,11 @@ if(DEFINED BUILD_SHARED_LIBS)
   set(shared_lib "${BUILD_SHARED_LIBS}")
 endif()
 # The actual variables that need to be set and matched in Config
-set(LOCATE_EXAMPLE_SHARED "${shared_lib}"
+set(locate-example_SHARED "${shared_lib}"
   CACHE INTERNAL
   "Whether the locate-example project was built as a shared library"
 )
-set(LOCATE_EXAMPLE_DATA_DIR "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}"
+set(locate-example_DATA_DIR "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}"
   CACHE INTERNAL
   "The absolute path to the data files directory"
 )
