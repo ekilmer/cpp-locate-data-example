@@ -32,13 +32,23 @@ generate_export_header(
     CUSTOM_CONTENT_FROM_VARIABLE pragma_suppress_c4251
 )
 
-# Setup default paths during CMake configure
-file(RELATIVE_PATH datadir_relative_exe "/${CMAKE_INSTALL_BINDIR}" "/${locate-example_INSTALL_DATADIR}")
+# Calculate relative paths to executables and libraries
+file(RELATIVE_PATH datadir_relative_exe
+  "/${CMAKE_INSTALL_BINDIR}"
+  "/${locate-example_INSTALL_DATADIR}"
+)
+file(RELATIVE_PATH datadir_relative_lib
+  "/${CMAKE_INSTALL_LIBDIR}"
+  "/${locate-example_INSTALL_DATADIR}"
+)
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_BINDIR}" "/${locate-example_INSTALL_DATADIR}")
-else()
-  file(RELATIVE_PATH datadir_relative_lib "/${CMAKE_INSTALL_LIBDIR}" "/${locate-example_INSTALL_DATADIR}")
+  file(RELATIVE_PATH datadir_relative_lib
+    "/${CMAKE_INSTALL_BINDIR}"
+    "/${locate-example_INSTALL_DATADIR}"
+  )
 endif()
+
+# Insert the above relative paths into source code
 configure_file(
   generate/include/locate-example/defaultPaths.hpp.in
   "${PROJECT_BINARY_DIR}/generate/include/locate-example/defaultPaths.hpp"
@@ -108,20 +118,20 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
   include(cmake/install-rules.cmake)
 endif()
 
-# Other rules related to installation/usage of this project
-# These are also set in the project Config file
-# Other rules related to installation/usage of this project
-# These are also set in the project Config file
+# Other variables related to installation/usage of this project
+# These variables are also set in the project Config file
 # NOTE: If BUILD_SHARED_LIBS isn't defined, then default is static
 set(shared_lib OFF)
 if(DEFINED BUILD_SHARED_LIBS)
   set(shared_lib "${BUILD_SHARED_LIBS}")
 endif()
 # The actual variables that need to be set and matched in Config
-set(LOCATE_EXAMPLE_SHARED "${shared_lib}" CACHE INTERNAL
+set(LOCATE_EXAMPLE_SHARED "${shared_lib}"
+  CACHE INTERNAL
   "Whether the locate-example project was built as a shared library"
 )
-set(LOCATE_EXAMPLE_DATA_DIR "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}" CACHE INTERNAL
+set(LOCATE_EXAMPLE_DATA_DIR "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}"
+  CACHE INTERNAL
   "The absolute path to the data files directory"
 )
 
