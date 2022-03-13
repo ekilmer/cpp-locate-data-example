@@ -14,14 +14,6 @@
       }
     },
     {
-      "name": "vcpkg-ci",
-      "hidden": true,
-      "inherits": "vcpkg",
-      "environment": {
-        "VCPKG_ROOT": "${sourceDir}/../vcpkg"
-      }
-    },
-    {
       "name": "dependencies-build-dir-ci",
       "hidden": true,
       "description": "Path to where our main library was built",
@@ -104,42 +96,42 @@
     },
     {
       "name": "ci-macos-11-build-dir",
-      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-ci", "dependencies-build-dir-ci"],
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-build-dir-ci"],
       "errors": {
         "dev": false
       }
     },
     {
       "name": "ci-ubuntu-20.04-build-dir",
-      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-ci", "dependencies-build-dir-ci"],
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-build-dir-ci"],
       "errors": {
         "dev": false
       }
     },
     {
       "name": "ci-windows-2019-build-dir",
-      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg-ci", "dependencies-build-dir-ci"],
+      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg", "dependencies-build-dir-ci"],
       "errors": {
         "dev": false
       }
     },
     {
       "name": "ci-macos-11-install-dir",
-      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-ci", "dependencies-install-dir-ci"],
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-install-dir-ci"],
       "errors": {
         "dev": false
       }
     },
     {
       "name": "ci-ubuntu-20.04-install-dir",
-      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-ci", "dependencies-install-dir-ci"],
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-install-dir-ci"],
       "errors": {
         "dev": false
       }
     },
     {
       "name": "ci-windows-2019-install-dir",
-      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg-ci", "dependencies-install-dir-ci"],
+      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg", "dependencies-install-dir-ci"],
       "errors": {
         "dev": false
       }

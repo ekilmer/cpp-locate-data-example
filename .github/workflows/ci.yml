@@ -48,8 +48,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        submodules: true
+
+    - name: Setup vcpkg
+      run: |
+        echo "VCPKG_ROOT=${VCPKG_INSTALLATION_ROOT}" >> "${GITHUB_ENV}"
+        git -C "${VCPKG_INSTALLATION_ROOT}" stash
+        git -C "${VCPKG_INSTALLATION_ROOT}" pull
 
     - name: Install LCov
       run: sudo apt-get update -q
@@ -57,8 +61,7 @@ jobs:
 
     - name: Configure
       run: |
-        ./vcpkg/bootstrap-vcpkg.sh
-        mono "$(./vcpkg/vcpkg fetch nuget | tail -n 1)" \
+        mono "$(vcpkg fetch nuget | tail -n 1)" \
           sources add \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
           -storepasswordincleartext \
@@ -89,14 +92,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        submodules: true
+
+    - name: Setup vcpkg
+      run: |
+        echo "VCPKG_ROOT=${VCPKG_INSTALLATION_ROOT}" >> "${GITHUB_ENV}"
+        git -C "${VCPKG_INSTALLATION_ROOT}" stash
+        git -C "${VCPKG_INSTALLATION_ROOT}" pull
 
     - name: Configure
       env: { CXX: clang++-11 }
       run: |
-        ./vcpkg/bootstrap-vcpkg.sh
-        mono "$(./vcpkg/vcpkg fetch nuget | tail -n 1)" \
+        mono "$(vcpkg fetch nuget | tail -n 1)" \
           sources add \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
           -storepasswordincleartext \
@@ -136,19 +142,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        submodules: true
+
+    - name: Setup vcpkg
+      shell: bash
+      run: |
+        echo "VCPKG_ROOT=${VCPKG_INSTALLATION_ROOT}" >> "${GITHUB_ENV}"
+        git -C "${VCPKG_INSTALLATION_ROOT}" stash
+        git -C "${VCPKG_INSTALLATION_ROOT}" pull
 
     - name: Install static analyzers
       if: startsWith(matrix.os, 'ubuntu')
-      run: sudo apt-get install clang-tidy cppcheck -y -q
+      run: |
+        sudo apt-get install clang-tidy cppcheck -y -q
 
     - name: Configure Unix
       if: "!startsWith(matrix.os, 'windows')"
       run: |
-        ./vcpkg/bootstrap-vcpkg.sh
         # Setup NuGet authentication
-        mono "$(./vcpkg/vcpkg fetch nuget | tail -n 1)" \
+        mono "$(vcpkg fetch nuget | tail -n 1)" \
           sources add \
           -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
           -storepasswordincleartext \
@@ -162,8 +173,7 @@ jobs:
     - name: Configure Windows
       if: startsWith(matrix.os, 'windows')
       run: |
-        ./vcpkg/bootstrap-vcpkg.bat
-        & "$(./vcpkg/vcpkg fetch nuget | select -last 1)" `
+        & "$(vcpkg fetch nuget | select -last 1)" `
           sources add `
             -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
             -storepasswordincleartext `
@@ -230,8 +240,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        submodules: true
 
     - uses: actions/setup-python@v2
       with: { python-version: "3.8" }

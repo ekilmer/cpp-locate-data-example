@@ -8,7 +8,6 @@
   "configurePresets": [
     {
       "name": "vcpkg",
-      "description": "Set up vcpkg overlay ports and where to find the toolchain file",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
@@ -16,20 +15,10 @@
     },
     {
       "name": "vcpkg-test",
-      "description": "Enables building of test dependencies",
       "hidden": true,
       "inherits": "vcpkg",
       "cacheVariables": {
         "VCPKG_MANIFEST_FEATURES": "tests"
-      }
-    },
-    {
-      "name": "vcpkg-ci",
-      "description": "Use the submodule'd vcpkg directory for building dependencies",
-      "inherits": "vcpkg-test",
-      "binaryDir": "${sourceDir}/build",
-      "environment": {
-        "VCPKG_ROOT": "${sourceDir}/vcpkg"
       }
     },
     {
@@ -124,7 +113,7 @@
     },
     {
       "name": "ci-coverage",
-      "inherits": ["coverage-unix", "dev-mode", "vcpkg-ci"],
+      "inherits": ["coverage-unix", "dev-mode", "vcpkg-test"],
       "cacheVariables": {
         "COVERAGE_HTML_COMMAND": ""
       },
@@ -135,7 +124,7 @@
     {
       "name": "ci-sanitize",
       "binaryDir": "${sourceDir}/build/sanitize",
-      "inherits": ["ci-unix", "dev-mode", "vcpkg-ci"],
+      "inherits": ["ci-unix", "dev-mode", "vcpkg-test"],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Sanitize",
         "CMAKE_CXX_FLAGS_SANITIZE": "-O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common"
@@ -151,21 +140,21 @@
     },
     {
       "name": "ci-macos-11",
-      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-ci"],
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-test"],
       "errors": {
         "dev": false
       }
     },
     {
       "name": "ci-ubuntu-20.04",
-      "inherits": ["ci-build", "ci-unix", "clang-tidy", "cppcheck", "dev-mode", "vcpkg-ci"],
+      "inherits": ["ci-build", "ci-unix", "clang-tidy", "cppcheck", "dev-mode", "vcpkg-test"],
       "errors": {
         "dev": false
       }
     },
     {
       "name": "ci-windows-2019",
-      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg-ci"],
+      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg-test"],
       "errors": {
         "dev": false
       }
