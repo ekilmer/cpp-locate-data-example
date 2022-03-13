@@ -1,70 +1,106 @@
 #pragma once
 
+#include <filesystem>
+#include <list>
+#include <optional>
 #include <string>
 
 #include "locate-example/locate-example_export.hpp"
 
+namespace locate_example
+{
+#ifndef LOCATE_EXAMPLE_STATIC_DEFINE
 /**
- * A note about the MSVC warning C4251:
- * This warning should be suppressed for private data members of the project's
- * exported classes, because there are too many ways to work around it and all
- * involve some kind of trade-off (increased code complexity requiring more
- * developer time, writing boilerplate code, longer compile times), but those
- * solutions are very situational and solve things in slightly different ways,
- * depending on the requirements of the project.
- * That is to say, there is no general solution.
+ * @brief Dummy function to expose an address when compiled as a shared library
  *
- * What can be done instead is understand where issues could arise where this
- * warning is spotting a legitimate bug. I will give the general description of
- * this warning's cause and break it down to make it trivial to understand.
- *
- * C4251 is emitted when an exported class has a non-static data member of a
- * non-exported class type.
- *
- * The exported class in our case is the class below (exported_class), which
- * has a non-static data member (m_name) of a non-exported class type
- * (std::string).
- *
- * The rationale here is that the user of the exported class could attempt to
- * access (directly, or via an inline member function) a static data member or
- * a non-inline member function of the data member, resulting in a linker
- * error.
- * Inline member function above means member functions that are defined (not
- * declared) in the class definition.
- *
- * Since this exported class never makes these non-exported types available to
- * the user, we can safely ignore this warning. It's fine if there are
- * non-exported class types as private member variables, because they are only
- * accessed by the members of the exported class itself.
- *
- * The name() method below returns a pointer to the stored null-terminated
- * string as a fundamental type (const char), so this is safe to use anywhere.
- * The only downside is that you can have dangling pointers if the pointer
- * outlives the class instance which stored the string.
- *
- * Shared libraries are not easy, they need some discipline to get right, but
- * they also solve some other problems that make them worth the time invested.
+ * Used to locate files relative to this compiled shared library's location.
  */
+LOCATE_EXAMPLE_EXPORT auto find_me() -> void;
+#endif
 
 /**
- * @brief Reports the name of the library
+ * @brief Find data files using relative paths to shared library or executable
+ * in order to support relocatable installation directories.
  *
- * Please see the note above for considerations when creating shared libraries.
+ * This class searches a number of locations in order of expected priority to
+ * find data files needed during runtime.
+ *
+ * The user may provide additional search paths in the event that the user wants
+ * to use custom data files or if the library is statically linked.
+ *
+ * With static linking it is impossible to automatically determine where the
+ * data files are located because there is no statically determined location
+ * that should always exist. For shared libraries and executables that are a
+ * part of this project, we can use pre-calculated paths, determined at
+ * configure time, to calculate the lookup path based on the location of the
+ * shared library or executable.
  */
-class LOCATE_EXAMPLE_EXPORT exported_class
+class LOCATE_EXAMPLE_EXPORT locator
 {
 public:
-  /**
-   * @brief Initializes the name field to the name of the project
-   */
-  exported_class();
+  using path_t = std::filesystem::path;
 
   /**
-   * @brief Returns a non-owning pointer to the string stored in this class
+   * @brief Initializes default hard-coded paths to search for data files
    */
-  auto name() const -> const char*;
+  locator();
+
+  /**
+   * @brief Whether to check environment variable when finding files
+   * @param use_env whether to check environment variable
+   */
+  auto use_env(bool use_env) -> void;
+
+  /**
+   * @brief Whether to check environment variable when finding files
+   */
+  [[nodiscard]] auto use_env() const -> bool;
+
+  /**
+   * @brief Add a non-default search directory to the lookup locations.
+   * @param dir The directory to use as a base for searching
+   */
+  auto add_explicit_search_dir(const path_t& dir) -> void;
+
+  /**
+   * @brief Add a non-default file path to the lookup locations.
+   * @param file The file path to use for searching
+   */
+  auto add_explicit_search_file(const path_t& file) -> void;
+
+  /**
+   * @brief Find the specified data file by name in the data directory
+   * @param rel_path The name of the file to find
+   * @param explicit_paths_only Whether to only look in paths that have been
+   * manually set
+   * @return The path to the file if found
+   */
+  [[nodiscard]] auto find_rel_path(const path_t& rel_path,
+                                   bool explicit_paths_only = false) const
+      -> std::optional<std::filesystem::path>;
 
 private:
+  // This path is the install location as specified during the build
   LOCATE_EXAMPLE_SUPPRESS_C4251
-  std::string m_name;
+  path_t m_standard_location;
+
+  // This path is calculated from where the compiled object (shared lib or
+  // executable) is located at runtime. This is to support relocatable
+  // installations
+  LOCATE_EXAMPLE_SUPPRESS_C4251
+  path_t m_calculated_from_obj_path;
+
+  LOCATE_EXAMPLE_SUPPRESS_C4251
+  std::list<path_t> m_explicit_directories;
+
+  LOCATE_EXAMPLE_SUPPRESS_C4251
+  std::list<path_t> m_explicit_files;
+
+  // Environment variable lookup for installation root
+  constexpr static auto m_env_install_root = "LOCATE_EXAMPLE_INSTALL_ROOT";
+
+  // Flag on whether to use the environment variable for extra path lookups
+  bool m_use_env = false;
 };
+
+}  // namespace locate_example

@@ -1,8 +1,8 @@
 {
-  "version": 3,
+  "version": 2,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 15,
+    "minor": 14,
     "patch": 0
   },
   "configurePresets": [
@@ -14,11 +14,19 @@
       }
     },
     {
-      "name": "vcpkg-test",
+      "name": "dependencies-build-dir-ci",
       "hidden": true,
-      "inherits": "vcpkg",
+      "description": "Path to where our main library was built",
       "cacheVariables": {
-        "VCPKG_MANIFEST_FEATURES": "tests"
+        "locate-example_DIR": "${sourceDir}/../build/share/locate-example"
+      }
+    },
+    {
+      "name": "dependencies-install-dir-ci",
+      "hidden": true,
+      "description": "Path to where our main library is installed",
+      "cacheVariables": {
+        "locate-example_DIR": "${sourceDir}/../prefix/share/locate-example"
       }
     },
     {
@@ -39,24 +47,7 @@
     {
       "name": "dev-mode",
       "hidden": true,
-      "inherits": "cmake-pedantic",
-      "cacheVariables": {
-        "locate-example_DEVELOPER_MODE": "ON"
-      }
-    },
-    {
-      "name": "cppcheck",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_CXX_CPPCHECK": "cppcheck;--inline-suppr"
-      }
-    },
-    {
-      "name": "clang-tidy",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--header-filter=${sourceDir}/*"
-      }
+      "inherits": "cmake-pedantic"
     },
     {
       "name": "ci-std",
@@ -99,62 +90,48 @@
       "hidden": true
     },
     {
-      "name": "coverage-unix",
-      "binaryDir": "${sourceDir}/build/coverage",
-      "inherits": "ci-unix",
-      "hidden": true,
-      "cacheVariables": {
-        "ENABLE_COVERAGE": "ON",
-        "CMAKE_BUILD_TYPE": "Coverage",
-        "CMAKE_CXX_FLAGS_COVERAGE": "-Og -g --coverage -fkeep-inline-functions -fkeep-static-functions",
-        "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
-        "CMAKE_SHARED_LINKER_FLAGS_COVERAGE": "--coverage"
-      }
-    },
-    {
-      "name": "ci-coverage",
-      "inherits": ["coverage-unix", "dev-mode", "vcpkg-test"],
-      "cacheVariables": {
-        "COVERAGE_HTML_COMMAND": ""
-      },
-      "errors": {
-        "dev": false
-      }
-    },
-    {
-      "name": "ci-sanitize",
-      "binaryDir": "${sourceDir}/build/sanitize",
-      "inherits": ["ci-unix", "dev-mode", "vcpkg-test"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Sanitize",
-        "CMAKE_CXX_FLAGS_SANITIZE": "-O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common"
-      },
-      "errors": {
-        "dev": false
-      }
-    },
-    {
       "name": "ci-build",
       "binaryDir": "${sourceDir}/build",
       "hidden": true
     },
     {
-      "name": "ci-macos-11",
-      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg-test"],
+      "name": "ci-macos-11-build-dir",
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-build-dir-ci"],
       "errors": {
         "dev": false
       }
     },
     {
-      "name": "ci-ubuntu-20.04",
-      "inherits": ["ci-build", "ci-unix", "clang-tidy", "cppcheck", "dev-mode", "vcpkg-test"],
+      "name": "ci-ubuntu-20.04-build-dir",
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-build-dir-ci"],
       "errors": {
         "dev": false
       }
     },
     {
-      "name": "ci-windows-2019",
-      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg-test"],
+      "name": "ci-windows-2019-build-dir",
+      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg", "dependencies-build-dir-ci"],
+      "errors": {
+        "dev": false
+      }
+    },
+    {
+      "name": "ci-macos-11-install-dir",
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-install-dir-ci"],
+      "errors": {
+        "dev": false
+      }
+    },
+    {
+      "name": "ci-ubuntu-20.04-install-dir",
+      "inherits": ["ci-build", "ci-unix", "dev-mode", "vcpkg", "dependencies-install-dir-ci"],
+      "errors": {
+        "dev": false
+      }
+    },
+    {
+      "name": "ci-windows-2019-install-dir",
+      "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg", "dependencies-install-dir-ci"],
       "errors": {
         "dev": false
       }

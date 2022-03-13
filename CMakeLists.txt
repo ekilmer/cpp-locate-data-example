@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 
 include(cmake/prelude.cmake)
 
@@ -14,6 +14,7 @@ docs_early_return()
 
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
+include(cmake/set-multiconfig-target-properties.cmake)
 
 # ---- Declare library ----
 
@@ -31,6 +32,33 @@ generate_export_header(
     CUSTOM_CONTENT_FROM_VARIABLE pragma_suppress_c4251
 )
 
+# Calculate relative paths to executables and libraries
+file(RELATIVE_PATH datadir_relative_exe
+  "/${CMAKE_INSTALL_BINDIR}"
+  "/${locate-example_INSTALL_DATADIR}"
+)
+file(RELATIVE_PATH datadir_relative_lib
+  "/${CMAKE_INSTALL_LIBDIR}"
+  "/${locate-example_INSTALL_DATADIR}"
+)
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+  file(RELATIVE_PATH datadir_relative_lib
+    "/${CMAKE_INSTALL_BINDIR}"
+    "/${locate-example_INSTALL_DATADIR}"
+  )
+endif()
+
+# Insert the above relative paths into source code
+configure_file(
+  generate/include/locate-example/defaultPaths.hpp.in
+  "${PROJECT_BINARY_DIR}/generate/include/locate-example/defaultPaths.hpp"
+  @ONLY
+)
+file(GENERATE
+  OUTPUT "${PROJECT_BINARY_DIR}/include/locate-example/defaultPaths.hpp"
+  INPUT "${PROJECT_BINARY_DIR}/generate/include/locate-example/defaultPaths.hpp"
+)
+
 if(NOT BUILD_SHARED_LIBS)
   target_compile_definitions(locate-example_locate-example PUBLIC LOCATE_EXAMPLE_STATIC_DEFINE)
 endif()
@@ -44,11 +72,13 @@ set_target_properties(
     EXPORT_NAME locate-example
     OUTPUT_NAME locate-example
 )
+set_multiconfig_target_properties(locate-example_locate-example)
 
 target_include_directories(
     locate-example_locate-example ${warning_guard}
     PUBLIC
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+    "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"
 )
 
 target_include_directories(
@@ -59,11 +89,51 @@ target_include_directories(
 
 target_compile_features(locate-example_locate-example PUBLIC cxx_std_17)
 
+find_package(cpplocate REQUIRED)
+
+target_link_libraries(locate-example_locate-example PRIVATE cpplocate::cpplocate)
+
+# ---- Handle data files ----
+
+# Use some configure-time info to generate a file with content that isn't known
+# until project configuration. This could also be codegen of some sort
+configure_file(
+  generate/data/dynamic.txt.in
+  "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}/dynamic.txt"
+  @ONLY
+)
+
+# Copy all static data files to build directory so that they are locatable
+# by our binaries/tests from the build directory
+add_custom_command(
+  TARGET locate-example_locate-example POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/data/"
+    "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}"
+)
+
 # ---- Install rules ----
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
   include(cmake/install-rules.cmake)
 endif()
+
+# Other variables related to installation/usage of this project
+# These variables are also set in the project Config file
+# NOTE: If BUILD_SHARED_LIBS isn't defined, then default is static
+set(shared_lib OFF)
+if(DEFINED BUILD_SHARED_LIBS)
+  set(shared_lib "${BUILD_SHARED_LIBS}")
+endif()
+# The actual variables that need to be set and matched in Config
+set(locate-example_SHARED "${shared_lib}"
+  CACHE INTERNAL
+  "Whether the locate-example project was built as a shared library"
+)
+set(locate-example_DATA_DIR "${PROJECT_BINARY_DIR}/${locate-example_INSTALL_DATADIR}"
+  CACHE INTERNAL
+  "The absolute path to the data files directory"
+)
 
 # ---- Examples ----
 

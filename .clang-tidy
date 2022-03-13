@@ -1,9 +1,12 @@
 ---
 # Enable ALL the things! Except not really
 # misc-non-private-member-variables-in-classes: the options don't do anything
+# altera-id-dependent-backward-branch: Catch2 test issues
+# readability-function-cognitive-complexity.IgnoreMacros: Catch2 test issues
 Checks: "*,\
   -google-readability-todo,\
   -altera-unroll-loops,\
+  -altera-id-dependent-backward-branch,\
   -fuchsia-*,\
   fuchsia-multiple-inheritance,\
   -llvm-header-guard,\
@@ -28,6 +31,8 @@ CheckOptions:
   - key: 'readability-simplify-boolean-expr.ChainedConditionalAssignment'
     value: 'true'
   - key: 'readability-uniqueptr-delete-release.PreferResetCall'
+    value: 'true'
+  - key: 'readability-function-cognitive-complexity.IgnoreMacros'
     value: 'true'
   - key: 'cppcoreguidelines-init-variables.MathHeader'
     value: '<cmath>'

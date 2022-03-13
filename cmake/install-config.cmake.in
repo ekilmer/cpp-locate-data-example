@@ -1,0 +1,22 @@
+@PACKAGE_INIT@
+
+# Whether the library was built shared. If it was built shared, then the
+# data files should be found without issues, but if it's built statically
+# the user must take care to specify paths on where to find the data.
+# See 'locate-example_DATA_DIR' below for an absolute path.
+set(locate-example_SHARED @BUILD_SHARED_LIBS@)
+
+# NOTE: This variable should not be compiled into the binary using this library
+# because it is a dynamically calculated absolute path, which would make the
+# resulting binary not portable or reproducible.
+set_and_check(locate-example_DATA_DIR "@PACKAGE_locate-example_INSTALL_DATADIR@")
+
+include(CMakeFindDependencyMacro)
+
+# TODO(ekilmer): Investigate this more on Windows with DLLs... Not sure the
+#  correct way for installation of private dependencies
+# if(NOT "@BUILD_SHARED_LIBS@")
+  find_dependency(cpplocate)
+# endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/locate-exampleTargets.cmake")

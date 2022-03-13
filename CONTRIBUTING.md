@@ -1,9 +1,10 @@
 # Contributing
 
-<!--
-    Short overview, rules, general guidelines, notes about pull requests and
-    style should go here.
--->
+This is a project for the purpose of showing best practices and demonstration of how to support a project that needs to locate data files at runtime.
+
+Please keep contributions close to that topic.
+
+If you find anything that you think should be changed, please open an issue or (even better) a pull request, and we can discuss a resolution.
 
 ## Code of Conduct
 

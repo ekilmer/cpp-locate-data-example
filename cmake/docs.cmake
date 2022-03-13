@@ -13,8 +13,8 @@ endmacro()
 include(FetchContent)
 FetchContent_Declare(
     mcss URL
-    https://github.com/friendlyanon/m.css/releases/download/release-1/mcss.zip
-    URL_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
+    https://github.com/mosra/m.css/archive/d44d4609099080f881a656d885232bc51bbf101c.zip
+    URL_MD5 962fb22a6fa82aaa10b3511d4b08bf73
     SOURCE_DIR "${PROJECT_BINARY_DIR}/mcss"
     UPDATE_DISCONNECTED YES
 )

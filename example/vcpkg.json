@@ -1,0 +1,11 @@
+{
+  "name": "example",
+  "version-semver": "0.1.0",
+  "dependencies": [
+    {
+      "name": "libcpplocate",
+      "version>=": "2.3.0"
+    }
+  ],
+  "builtin-baseline": "af2287382b1991dbdcb7e5112d236f3323b9dd7a"
+}
